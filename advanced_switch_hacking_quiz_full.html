@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Switch Hacking Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+    .quiz-container { background: #fff; padding: 20px; border-radius: 8px; max-width: 900px; margin: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h2 { color: #333; }
+    .question { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; }
+    button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; border: none; color: white; border-radius: 5px; cursor: pointer; }
+    .result { font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Advanced Nintendo Switch Hacking Quiz</h2>
+    <form id="quizForm"></form>
+    <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const quizData = 
+[
+  { "question": "What does RCM stand for in the Switch hacking scene?", "choices": ["Recovery Console Mode", "RCM Custom Firmware", "Revolution Control Module", "Recovery Mode"], "answer": "Recovery Mode" },
+  { "question": "What is the primary function of Lockpick_RCM?", "choices": ["Backup save data", "Launch custom themes", "Extract decryption keys", "Install CFW"], "answer": "Extract decryption keys" },
+  { "question": "What file format is used for homebrew apps on Switch?", "choices": ["NSP", "NRO", "XCI", "PKG"], "answer": "NRO" },
+  { "question": "Which payload is typically used to launch Atmosphere?", "choices": ["fusee-primary.bin", "hekate.bin", "tsec.bin", "nx-launcher.bin"], "answer": "fusee-primary.bin" },
+  { "question": "Which key file is essential for decrypting NSP content?", "choices": ["sd_seed.key", "prod.keys", "dev.keys", "xci.key"], "answer": "prod.keys" },
+  { "question": "What does EmuNAND emulate?", "choices": ["SD card", "Joy-Con firmware", "Internal NAND storage", "GPU module"], "answer": "Internal NAND storage" },
+  { "question": "What does TSEC stand for?", "choices": ["Trusted Security Encryption Core", "Tegra Security Co-processor", "Terminal Secure Entry Controller", "Tegra Secure Execution Core"], "answer": "Tegra Security Co-processor" },
+  { "question": "What is the purpose of 90DNS?", "choices": ["Boost download speed", "Block Nintendo telemetry", "Enable LAN play", "Speed up boot time"], "answer": "Block Nintendo telemetry" },
+  { "question": "Which CFW is developed by SciresM?", "choices": ["ReiNX", "SX OS", "Atmosphere", "Lakka"], "answer": "Atmosphere" },
+  { "question": "What does HBL stand for?", "choices": ["Homebrew Loader", "Horizon Boot Loader", "Hack Boot Layer", "Homebrew Layer"], "answer": "Homebrew Loader" },
+  { "question": "What is the function of the Daybreak tool in Atmosphere?", "choices": ["Boot payloads", "Dump NAND", "Install firmware updates", "Enable overclocking"], "answer": "Install firmware updates" },
+  { "question": "Which component is patched by fusee-gelee exploit?", "choices": ["TrustZone", "Horizon OS", "Boot ROM", "NAND"], "answer": "Boot ROM" },
+  { "question": "What is BIS key used for?", "choices": ["Decrypt saved games", "Identify SD card", "Access partition encryption", "Launch EmuNAND"], "answer": "Access partition encryption" },
+  { "question": "Which file represents a physical game cartridge dump?", "choices": ["NRO", "NSP", "XCI", "KEY"], "answer": "XCI" },
+  { "question": "Which Switch unit is NOT vulnerable to fusee-gelee by default?", "choices": ["Launch model", "Patched HAC-001", "Early serial units", "HAC-001(-01)"], "answer": "Patched HAC-001" },
+  { "question": "What file is required by Ryujinx/Yuzu to run decrypted games?", "choices": ["fs.rom", "prod.keys", "kernel.bin", "nand.dump"], "answer": "prod.keys" },
+  { "question": "Which command in Hekate is used to backup NAND?", "choices": ["Backup > eMMC BOOT0/1 & RAW GPP", "Launch EmuNAND", "Payload Inject", "TSEC Dump"], "answer": "Backup > eMMC BOOT0/1 & RAW GPP" },
+  { "question": "What is fusee-secondary.bin used for?", "choices": ["Initializing Joy-Con", "Launching sysmodules", "Part of Atmosphere boot chain", "Decrypting XCI"], "answer": "Part of Atmosphere boot chain" },
+  { "question": "What is the default directory for placing .nro files for HBL?", "choices": ["/hb/", "/apps/", "/switch/", "/homebrew/"], "answer": "/switch/" },
+  { "question": "What is NXDumpTool used for?", "choices": ["Download updates", "Dump games and keys", "Run emulators", "Edit NAND"], "answer": "Dump games and keys" },
+  { "question": "Which tool enables cheat overlays on the Switch?", "choices": ["Tesla Overlay", "sys-ftpd", "nx-ovl", "nx-cheats"], "answer": "Tesla Overlay" },
+  { "question": "Which sysmodule allows overclocking?", "choices": ["sys-con", "sys-clk", "sys-ovl", "sys-tweak"], "answer": "sys-clk" },
+  { "question": "Which homebrew enables PC gamepad input on Switch via USB?", "choices": ["usb-hid", "sys-con", "hid-mapper", "nx-input"], "answer": "sys-con" },
+  { "question": "What is a common use for BOOT0/1 backups?", "choices": ["Save themes", "System recovery", "Online play", "Install CFW"], "answer": "System recovery" },
+  { "question": "What is the official OS of the Nintendo Switch called?", "choices": ["Atmosphere", "NXOS", "Horizon", "Fusée"], "answer": "Horizon" },
+  { "question": "What file system must the SD card use to run CFW payloads?", "choices": ["FAT32", "exFAT", "NTFS", "APFS"], "answer": "FAT32" },
+  { "question": "What is the function of exosphere in Atmosphere?", "choices": ["Run cheats", "Bypass telemetry", "Install NSP", "Extract firmware"], "answer": "Bypass telemetry" },
+  { "question": "What is the goal of incognitoRCM?", "choices": ["Enable FTP", "Hide console identity from Nintendo", "Dump OTP", "Enable cheats"], "answer": "Hide console identity from Nintendo" },
+  { "question": "Which file contains the primary bootloader for Atmosphere?", "choices": ["fusee.bin", "bootloader.bin", "boot.dat", "hekate.bin"], "answer": "fusee.bin" },
+  { "question": "What tool is used to patch Joy-Con drift?", "choices": ["driftfix", "hid-joycon", "calibrate-nx", "no drifting"], "answer": "hid-joycon" },
+  { "question": "Which module enables screenshot streaming over LAN?", "choices": ["sys-screen", "lan-capture", "sys-capture", "nx-stream"], "answer": "sys-capture" },
+  { "question": "What is Noexs used for?", "choices": ["Memory debugging and cheating", "Running backups", "Boot logging", "Joy-Con pairing"], "answer": "Memory debugging and cheating" },
+  { "question": "What is the purpose of fusee-suite?", "choices": ["Custom payload launcher", "Web interface for Hekate", "Exploit/bootloader set for CFW", "Key generator"], "answer": "Exploit/bootloader set for CFW" },
+  { "question": "Which title manages system settings in Horizon OS?", "choices": ["SystemUI", "SystemSettings", "HBLUI", "NXUI"], "answer": "SystemSettings" },
+  { "question": "What file extension is typically used for key dumps?", "choices": [".keys", ".dump", ".kys", ".cfg"], "answer": ".keys" },
+  { "question": "What is the key role of Tinfoil on modded Switches?", "choices": ["Overclock system", "Install NSP/XCI packages", "Stream video", "Patch games"], "answer": "Install NSP/XCI packages" },
+  { "question": "Which Switch modchip is known for RCM bypass and payload injection?", "choices": ["SX Core", "NX Lite", "Switch Pro", "RCM Boot"], "answer": "SX Core" },
+  { "question": "Which bootloader GUI is commonly used with Atmosphere?", "choices": ["boot9strap", "Hekate", "U-Boot", "BootGUI"], "answer": "Hekate" },
+  { "question": "Which file on SD card should hold atmosphere config?", "choices": ["atmosphere.ini", "config.txt", "loader.ini", "system_settings.ini"], "answer": "system_settings.ini" },
+  { "question": "What hardware identifier is used to determine unit vulnerability?", "choices": ["Serial number", "UUID", "NAND ID", "MAC address"], "answer": "Serial number" }
+]
+;
+
+    const form = document.getElementById('quizForm');
+    quizData.forEach((q, index) => {
+      const div = document.createElement('div');
+      div.classList.add('question');
+      div.innerHTML = `<p><strong>${index + 1}. ${q.question}</strong></p>` +
+        q.choices.map(choice =>
+          `<label><input type="radio" name="q${index}" value="${choice}" /> ${choice}</label>`
+        ).join('');
+      form.appendChild(div);
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      quizData.forEach((q, i) => {
+        const selected = document.querySelector(`input[name=q${i}]:checked`);
+        if (selected && selected.value === q.answer) score++;
+      });
+      document.getElementById('result').innerText = `You scored ${score} out of ${quizData.length}!`;
+    }
+  </script>
+</body>
+</html>
